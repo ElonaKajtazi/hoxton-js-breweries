@@ -51,23 +51,20 @@ let state: State = {
 
 //Q: Witch state are we looking for? (state.usState)
 //Q: What breweries do we need to display? (state.breweries)
-function getBrweriesForState() {
+function getBrweriesFromServer() {
   fetch(
     "https://api.openbrewerydb.org/breweries?per_page=50://api.openbrewerydb.org/breweries"
   )
     .then((resp) => resp.json())
     .then((getBreweriesFromServer) => {
       state.breweries = getBreweriesFromServer;
-      getBreweriesFromServer.forEach((brewery: Brewery) => {
-        if (brewery.state === state.usState) {
-          console.log(brewery);
-        }
-      }
-      );
       render();
     });
 }
+function getBrweriesForState() {
+// HOW DO I GET BREWERIES FOR A STATE???
 
+}
 function renderBrewery() {
   // getting the main section from html
   let mainEl = document.querySelector("main");
@@ -175,7 +172,7 @@ function listenToSelectStateForm() {
 }
 
 listenToSelectStateForm();
-getBrweriesForState();
+getBrweriesFromServer();
 render();
 
 
