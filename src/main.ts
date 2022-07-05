@@ -103,7 +103,7 @@ function renderBrewery() {
   ulEl.className = "breweries-list";
 
   // rendering the list item of breweries
-  for (let brewery of state.breweries.slice(-10)) {
+  for (let brewery of state.breweries) {
     let liEl = document.createElement("li");
 
     let h2El2 = document.createElement("h2");
@@ -178,4 +178,4 @@ listenToSelectStateForm();
 getBrweriesForState();
 render();
 
-window.state = state;
+
