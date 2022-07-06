@@ -1,44 +1,21 @@
-// const breweries = [
-//   {
-//     address_2: null,
-//     address_3: null,
-//     brewery_type: 'large',
-//     city: 'San Diego',
-//     country: 'United States',
-//     county_province: null,
-//     created_at: '2018-07-24T00:00:00.000Z',
-//     id: 8041,
-//     latitude: '32.714813',
-//     longitude: '-117.129593',
-//     name: '10 Barrel Brewing Co',
-//     obdb_id: '10-barrel-brewing-co-san-diego',
-//     phone: '6195782311',
-//     postal_code: '92101-6618',
-//     state: 'California',
-//     street: '1501 E St',
-//     updated_at: '2018-08-23T00:00:00.000Z',
-//     website_url: 'http://10barrel.com'
-//   }
-// ]
 type Brewery = {
+  id: string;
+  name: string;
+  brewery_type: string;
+  street: null;
   address_2: string | null;
   address_3: string | null;
-  brewery_type: string;
   city: string;
-  country: string;
-  county_province: string | null;
-  created_at: string;
-  id: number;
-  latitude: string;
-  longitude: string;
-  name: string;
-  obdb_id: string;
-  phone: string;
-  postal_code: string;
   state: string;
-  street: string;
+  county_province: string | null;
+  postal_code: string;
+  country: string;
+  longitude: string | null;
+  latitude: string | null;
+  phone: string | null;
+  website_url: string | null;
   updated_at: string;
-  website_url: string;
+  created_at: string;
 };
 type State = {
   usState: string;
@@ -51,20 +28,15 @@ let state: State = {
 
 //Q: Witch state are we looking for? (state.usState)
 //Q: What breweries do we need to display? (state.breweries)
-function getBrweriesFromServer() {
-  fetch(
-    "https://api.openbrewerydb.org/breweries?per_page=50://api.openbrewerydb.org/breweries"
-  )
+function getBrweriesForState() {
+  fetch(`https://api.openbrewerydb.org/breweries?by_state=${state.usState}`)
     .then((resp) => resp.json())
     .then((getBreweriesFromServer) => {
       state.breweries = getBreweriesFromServer;
       render();
     });
 }
-function getBrweriesForState() {
-// HOW DO I GET BREWERIES FOR A STATE???
 
-}
 function renderBrewery() {
   // getting the main section from html
   let mainEl = document.querySelector("main");
@@ -130,15 +102,19 @@ function renderBrewery() {
     h3El2.textContent = "Phone:";
 
     let pEl3 = document.createElement("p");
-    pEl3.textContent = brewery.phone;
+    pEl3.textContent = brewery.phone ? brewery.phone : "N/A";
 
     let sectionEl3 = document.createElement("section");
     sectionEl3.className = "link";
 
     let aEl = document.createElement("a");
-    aEl.href = brewery.website_url;
-    aEl.target = "_blank";
-    aEl.textContent = "Visit Website";
+    if (brewery.website_url) {
+      aEl.href = brewery.website_url;
+      aEl.textContent = "Visit Website";
+    } else {
+      aEl.href = "#";
+      aEl.textContent = "No Website";
+    }
 
     ulEl.append(liEl);
     liEl.append(h2El2, divEl, sectionEl, sectionEl2, sectionEl3);
@@ -172,7 +148,4 @@ function listenToSelectStateForm() {
 }
 
 listenToSelectStateForm();
-getBrweriesFromServer();
 render();
-
-
