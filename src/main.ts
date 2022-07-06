@@ -14,7 +14,15 @@
 // - When a user enters a US state into the search bar (and hits enter): ✅
 // - Fetch a list of 10 breweries from the API for that state ✅
 // - Render the results on the page ✅
-// - Render a form with an input that allows the user to filter by brewery name at the top of the results ⚒️
+// - Render a form with an input that allows the user to filter by brewery name at the top of the results ✅
+
+// Challenge 1 ⚒️
+
+// - Make it so from the 'filter by type of brewery' section, a user can filter by type of brewery:
+//     - All Breweries
+//         - Micro
+//         - Regional
+//         - Brewpub
 
 type Brewery = {
   id: string;
@@ -59,6 +67,7 @@ function getBrweriesForState() {
       render();
     });
 }
+
 // function getFilteredBreweries() {
 //   let filteredBreweries = state.breweries.filter((brewery) => {
 //     return brewery.name.toLowerCase().includes(state.nameFilter.toLowerCase());
@@ -66,6 +75,51 @@ function getBrweriesForState() {
 //   return filteredBreweries;
 // }
 
+//  function getBreweryTypesFromServer() {
+//   fetch(`https://api.openbrewerydb.org/breweries?by_type=${state.typeFilter}`)
+//     .then((resp) => resp.json())
+//     .then((getBreweryTypesFromServer) => {
+//       state.typeFilter = getBreweryTypesFromServer;
+//       console.log(state.typeFilter);
+//       render();
+//     });
+// }
+// function getBreweryTypes() {
+//   let filteredTypes = state.typeFilter = state.breweries.filter((brewery) => {
+//     return brewery.brewery_type.toLowerCase().includes(state.typeFilter.toLowerCase());
+
+//   });
+//  return filteredTypes;
+// }
+
+function renderNameSearchForm() {
+  let formEl = document.createElement("form");
+  formEl.id = "search-breweries-form";
+  formEl.autocomplete = "off";
+  formEl.addEventListener("submit", (event) => {
+    event.preventDefault();
+    state.nameFilter = inputEl.value;
+    getBrweriesForState();
+    // render();
+  });
+
+  let labelEl = document.createElement("label");
+  labelEl.htmlFor = "search-breweries";
+
+  let h2El = document.createElement("h2");
+  h2El.textContent = "Search breweries:";
+
+  let inputEl = document.createElement("input");
+  inputEl.id = "search-breweries";
+  inputEl.name = "search-breweries";
+  inputEl.type = "text";
+
+  formEl.append(labelEl, inputEl);
+  labelEl.append(h2El);
+
+  return formEl;
+  // headerEl.append(formEl);
+}
 function renderBreweryListItem(brewery: Brewery, ulEl: HTMLUListElement) {
   let liEl = document.createElement("li");
 
@@ -117,35 +171,7 @@ function renderBreweryListItem(brewery: Brewery, ulEl: HTMLUListElement) {
   sectionEl2.append(h3El2, pEl3);
   sectionEl3.append(aEl);
 }
-function renderNameSearchForm() {
-  let formEl = document.createElement("form");
-  formEl.id = "search-breweries-form";
-  formEl.autocomplete = "off";
-  formEl.addEventListener("submit", (event) => {
-    event.preventDefault();
-    state.nameFilter = inputEl.value;
-    getBrweriesForState();
-    // render();
-  });
 
-  let labelEl = document.createElement("label");
-  labelEl.htmlFor = "search-breweries";
-
-  let h2El = document.createElement("h2");
-  h2El.textContent = "Search breweries:";
-
-  let inputEl = document.createElement("input");
-  inputEl.id = "search-breweries";
-  inputEl.name = "search-breweries";
-  inputEl.type = "text";
-
-  formEl.append(labelEl, inputEl);
-  labelEl.append(h2El);
-
-  return formEl;
-  // headerEl.append(formEl);
-
-}
 function renderBrewery() {
   // getting the main section from html
   let mainEl = document.querySelector("main");
@@ -168,7 +194,7 @@ function renderBrewery() {
   ulEl.className = "breweries-list";
 
   // rendering the list item of breweries
-  
+
   for (let brewery of state.breweries) {
     renderBreweryListItem(brewery, ulEl);
   }
@@ -176,7 +202,6 @@ function renderBrewery() {
   mainEl.append(titleEl, headerEl, articleEl);
 
   headerEl.append(formEl);
-  
 }
 
 function render() {
@@ -187,54 +212,7 @@ function render() {
   renderBrewery();
 }
 
-function listenToSelectStateForm() {
-  let formEl = document.querySelector<HTMLFormElement>("#select-state-form");
-  formEl?.addEventListener("submit", (event) => {
-    event.preventDefault();
-    // @ts-ignore
-    let usState = formEl["select-state"].value;
-    state.usState = usState;
-    getBrweriesForState();
-  });
-}
-
-listenToSelectStateForm();
-render();
-window.state = state;
-// function renderAside(){
-//   let mainEl = document.querySelector("main");
-//   if (mainEl === null) return;
-//   mainEl.innerHTML = `<aside class="filters-section">
-//   <h2>Filter By:</h2>
-//   <!-- Type of brewery - Challenge #1 -->
-//   <form id="filter-by-type-form" autocompete="off">
-//     <label for="filter-by-type">
-//       <h3>Type of Brewery</h3>
-//     </label>
-//     <select name="filter-by-type" id="filter-by-type">
-//       <option value="">Select a type...</option>
-//       <option value="micro">Micro</option>
-//       <option value="regional">Regional</option>
-//       <option value="brewpub">Brewpub</option>
-//     </select>
-//   </form>
-//   <!-- Cities  - Challenge #2 -->
-//   <div class="filter-by-city-heading">
-//     <h3>Cities</h3><button class="clear-all-btn">clear all</button>
-//   </div>
-//   <form id="filter-by-city-form">
-//     <input type="checkbox" name="williamsville" value="williamsville">
-//     <label for="williamsville">Williamsville</label> <input type="checkbox" name="holland patent"
-//       value="holland patent">
-//     <label for="holland patent">Holland Patent</label>
-//     <input type="checkbox" name="holbrook" value="holbrook">
-//     <label for="more">More cities ...</label>
-//     <input type="checkbox" name="more" value="more">
-//   </form>
-
-// </aside>`;
-// }
-
+// Challange:
 function renderAside() {
   let mainEl = document.querySelector("main");
   if (mainEl === null) return;
@@ -261,7 +239,6 @@ function renderAside() {
 
   let optionEl = document.createElement("option");
   optionEl.value = "";
-
   optionEl.textContent = "Select a type...";
   let optionEl2 = document.createElement("option");
   optionEl2.value = "micro";
@@ -275,23 +252,9 @@ function renderAside() {
   optionEl4.value = "brewpub";
   optionEl4.textContent = "Brewpub";
 
-  selectEl.append(optionEl, optionEl2, optionEl3, optionEl4);
   formEl.append(labelEl, h3El, selectEl);
-
+  selectEl.append(optionEl, optionEl2, optionEl3, optionEl4);
   //   <!-- Cities  - Challenge #2 -->
-  //   <div class="filter-by-city-heading">
-  //     <h3>Cities</h3><button class="clear-all-btn">clear all</button>
-  //   </div>
-  //   <form id="filter-by-city-form">
-  //     <input type="checkbox" name="williamsville" value="williamsville">
-  //     <label for="williamsville">Williamsville</label> <input type="checkbox" name="holland patent"
-  //       value="holland patent">
-  //     <label for="holland patent">Holland Patent</label>
-  //     <input type="checkbox" name="holbrook" value="holbrook">
-  //     <label for="more">More cities ...</label>
-  //     <input type="checkbox" name="more" value="more">
-  //   </form>
-  // </aside>
 
   let divEl = document.createElement("div");
   divEl.className = "filter-by-city-heading";
@@ -343,8 +306,21 @@ function renderAside() {
     labelEl5
   );
 
-  asideEl.append(divEl, formEl2);
   asideEl.append(h2El, formEl, divEl, formEl2);
 
   mainEl.append(asideEl);
 }
+
+function listenToSelectStateForm() {
+  let formEl = document.querySelector<HTMLFormElement>("#select-state-form");
+  formEl?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    // @ts-ignore
+    let usState = formEl["select-state"].value;
+    state.usState = usState;
+    getBrweriesForState();
+  });
+}
+
+listenToSelectStateForm();
+render();
